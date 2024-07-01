@@ -3,10 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "example_package_YOUR_PACKAGE_NAME_HERE"
+name = "ExampleCalculationService"
 version = "0.0.1"
 authors = [
   { name="Example Author", email="author@example.com" },
+]
+dependencies = [
+  'helics==3.4.0',
+  'dots_infrastructure==0.0.6'
 ]
 description = "A small example package"
 readme = "README.md"
