@@ -1,5 +1,5 @@
 # Python-project-template
-A template repository for new python projects
+A template for DOTs-Helics Calculation Services
 
 ## Installation
 
