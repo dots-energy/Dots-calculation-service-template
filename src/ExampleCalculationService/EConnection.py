@@ -13,20 +13,37 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
         super().__init__()
 
         subscriptions_values = [
-            # SubscriptionDescription("PVInstallation", "PV_Dispatch", "W", h.HelicsDataType.DOUBLE)
+            SubscriptionDescription(esdl_type="PVInstallation", 
+                                    input_name="PV_Dispatch", 
+                                    input_unit="W", 
+                                    input_type=h.HelicsDataType.DOUBLE)
         ]
 
         publication_values = [
-            # PublicationDescription(True, "EConnection", "EConnectionDispatch", "W", h.HelicsDataType.DOUBLE)
+            PublicationDescription(global_flag=True, 
+                                   esdl_type="EConnection", 
+                                   output_name="EConnectionDispatch", 
+                                   output_unit="W", 
+                                   data_type=h.HelicsDataType.DOUBLE)
         ]
 
         e_connection_period_in_seconds = 60
 
-        calculation_information = HelicsCalculationInformation(e_connection_period_in_seconds, 0, False, False, True, "EConnectionDispatch", subscriptions_values, publication_values, self.e_connection_dispatch)
+        calculation_information = HelicsCalculationInformation(
+            time_period_in_seconds=e_connection_period_in_seconds, 
+            offset=0, 
+            uninterruptible=False, 
+            wait_for_current_time_update=False, 
+            terminate_on_error=True, 
+            calculation_name="EConnectionDispatch", 
+            inputs=subscriptions_values, 
+            outputs=publication_values, 
+            calculation_function=self.e_connection_dispatch
+        )
         self.add_calculation(calculation_information)
 
         publication_values = [
-            # PublicationDescription(True, "EConnection", "Schedule", "W", h.HelicsDataType.VECTOR)
+            PublicationDescription(True, "EConnection", "Schedule", "W", h.HelicsDataType.VECTOR)
         ]
 
         e_connection_period_in_seconds = 21600
@@ -36,6 +53,8 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
     def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, esdl_id : EsdlId):
         ret_val = {}
+        ret_val["EConnectionDispatch"] = sum(param_dict["PV_Dispatch"])
+        self.influx_connector.set_time_step_data_point(esdl_id, "EConnectionDispatch", simulation_time, ret_val["EConnectionDispatch"])
         return ret_val
     
     def e_connection_da_schedule(self, param_dict : dict, simulation_time : datetime, esdl_id : EsdlId):

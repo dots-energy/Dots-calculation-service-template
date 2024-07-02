@@ -1,7 +1,8 @@
 from datetime import datetime
 import unittest
 from ExampleCalculationService.EConnection import CalculationServiceEConnection
-from dots_infrastructure.DataClasses import SimulatorConfiguration
+from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint
+from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
 import helics as h
 
 from dots_infrastructure import CalculationServiceHelperFunctions
@@ -18,10 +19,19 @@ class Test(unittest.TestCase):
     def setUp(self):
         CalculationServiceHelperFunctions.get_simulator_configuration_from_environment = simulator_environment_e_connection
 
-    def test_empty_test(self):
+    def test_example(self):
+        # Arrange
         service = CalculationServiceEConnection()
-        # Implement Test Logic here 
-        self.assertTrue(True)
+        service.influx_connector = InfluxDBMock()
+        pv_dispatch_params = {}
+        pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
+
+        # Execute
+        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), "test-id")
+
+        # Implement 
+        self.assertEqual(ret_val["EConnectionDispatch"], 3.0)
+        self.assertListEqual([SimulaitonDataPoint("EConnectionDispatch", datetime(2024,1,1), 3.0, "test-id")], service.influx_connector.data_points)
 
 if __name__ == '__main__':
     unittest.main()

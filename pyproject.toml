@@ -8,10 +8,6 @@ version = "0.0.1"
 authors = [
   { name="Example Author", email="author@example.com" },
 ]
-dependencies = [
-  'helics==3.4.0',
-  'dots_infrastructure==0.0.6'
-]
 description = "A small example package"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -22,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Homepage = "https://github.com/EES-TUe/Dots-calculation-service-template"
+Issues = "https://github.com/EES-TUe/Dots-calculation-service-template/issues"
