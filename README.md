@@ -62,7 +62,7 @@ Finally, the the last line adds the calculation to the calculation service and e
 
 ## Building a docker image such that it can be used 
 
-1. Adjust `<<ImageName>>` to the name of the calculation service's image
+1. Adjust `<<ImageName>>` to the name of the calculation service's image in the file `.github/workflows/publish-image.yml`
 2. Push your changes to a new branch
 3. Create a pull request
 4. A github action will now run building the calculation service as a docker image and pushing it to the registry, as long as the pull request is not merged in the main branch the version number will be `test`
