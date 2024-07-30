@@ -10,7 +10,7 @@ on:
       - v*
   pull_request:
 env:
-  IMAGE_NAME: dots-test
+  IMAGE_NAME: <<ImageName>>
 jobs:
   push:
     runs-on: ubuntu-latest
