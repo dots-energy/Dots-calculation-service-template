@@ -27,7 +27,7 @@ class Test(unittest.TestCase):
         pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
 
         # Execute
-        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), "test-id")
+        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), "test-id", None)
 
         # Implement 
         self.assertEqual(ret_val["EConnectionDispatch"], 3.0)
