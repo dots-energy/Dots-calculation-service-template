@@ -6,6 +6,7 @@ import logging
 from dots_infrastructure.DataClasses import EsdlId, HelicsCalculationInformation, PublicationDescription, SubscriptionDescription
 from dots_infrastructure.HelicsFederateHelpers import HelicsSimulationExecutor
 from dots_infrastructure.Logger import LOGGER
+from esdl import EnergySystem
 
 class CalculationServiceEConnection(HelicsSimulationExecutor):
 
