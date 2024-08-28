@@ -44,6 +44,15 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
             calculation_function=self.e_connection_dispatch
         )
         self.add_calculation(calculation_information)
+    
+    def init_calculation_service(self, energy_system: esdl.EnergySystem):
+        LOGGER.info("init calculation service")
+
+    def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, esdl_id : EsdlId, energy_system: esdl.EnergySystem):
+        ret_val = {}
+        ret_val["EConnectionDispatch"] = sum(param_dict["PV_Dispatch"])
+        self.influx_connector.set_time_step_data_point(esdl_id, "EConnectionDispatch", simulation_time, ret_val["EConnectionDispatch"])
+        return ret_val
 ```
 
 First, you can see a list called `subscriptions_values`. This list defines the inputs of the calculation. In this case it hase one input that is supposed to come from the ESDL type called `PVInstallation` as specified by the `esdl_type` parameter. Next, the `input_name` parameter describes the name of the value that the `PVInstallation` produces. Finally, the `input_unit` and `input_type` describe the input's unit and type respectively. 
@@ -53,6 +62,10 @@ The second list describes the publications or outputs of the calculation. There 
 After the definition of the subscription and publication values the actual calculation is defined by instantiating `HelicsCalculationInformation`. The first 5 parameters are related to a helics federate confguration and therefore the reader is reffered to the [helics documentation](https://docs.helics.org/en/latest/references/configuration_options_reference.html#broker_init_string--null). The other parameters should be self explenatory based their names. 
 
 Finally, the the last line adds the calculation to the calculation service and ensures that it is executed during a running co-simulation. Every added calculation will become a [helics federate](https://docs.helics.org/en/latest/user-guide/fundamental_topics/helics_terminology.html) with their own timing parameters as defined in the `calculation_information`. To get an idea of how helics timing works have a look at this [page](https://docs.helics.org/en/latest/user-guide/fundamental_topics/timing_configuration.html) of the helics documentation.
+
+When the simulation starts there will be an initialization stage and a calculating stage. In the initialization phase a calculation service can initialize variables that are required in the calculation stage. This can be done by adjusting the `init_calculation_service` function. The esdl that is associated with the simulated scenario is given as a parameter to this function.
+
+In the calculation phase the calculation functions are called periodically and new inputs can be read and new outputs can be generated. An example of getting inputs, returning outputs and writing to the influx db can be found in the example above.
 
 ## Testing a calculation service
 

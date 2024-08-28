@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import random
+from esdl import esdl
 import helics as h
 import logging
 from dots_infrastructure.DataClasses import EsdlId, HelicsCalculationInformation, PublicationDescription, SubscriptionDescription
@@ -51,6 +51,9 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
         calculation_information_schedule = HelicsCalculationInformation(e_connection_period_in_seconds, 0, False, False, True, "EConnectionSchedule", [], publication_values, self.e_connection_da_schedule)
         self.add_calculation(calculation_information_schedule)
+
+    def init_calculation_service(self, energy_system: esdl.EnergySystem):
+        LOGGER.info("init calculation service")
 
     def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, esdl_id : EsdlId, energy_system : EnergySystem):
         ret_val = {}
