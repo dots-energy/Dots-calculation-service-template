@@ -34,6 +34,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
         calculation_information = HelicsCalculationInformation(
             time_period_in_seconds=e_connection_period_in_seconds, 
+            time_request_type=TimeRequestType.ON_INPUT,
             offset=0, 
             uninterruptible=False, 
             wait_for_current_time_update=False, 
@@ -44,11 +45,22 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
             calculation_function=self.e_connection_dispatch
         )
         self.add_calculation(calculation_information)
-    
+
+        publication_values = [
+            PublicationDescription(True, "EConnection", "Schedule", "W", h.HelicsDataType.VECTOR)
+        ]
+
+        e_connection_period_in_seconds = 21600
+
+        calculation_information_schedule = HelicsCalculationInformation(e_connection_period_in_seconds, TimeRequestType.PERIOD, 0, False, False, True, "EConnectionSchedule", [], publication_values, self.e_connection_da_schedule)
+        self.add_calculation(calculation_information_schedule)
+
     def init_calculation_service(self, energy_system: esdl.EnergySystem):
         LOGGER.info("init calculation service")
+        for esdl_id in self.simulator_configuration.esdl_ids:
+            LOGGER.info(f"Example of iterating over esdl ids: {esdl_id}")
 
-    def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, esdl_id : EsdlId, energy_system: esdl.EnergySystem):
+    def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, time_step_number : TimeStepInformation, esdl_id : EsdlId, energy_system : EnergySystem):
         ret_val = {}
         ret_val["EConnectionDispatch"] = sum(param_dict["PV_Dispatch"])
         self.influx_connector.set_time_step_data_point(esdl_id, "EConnectionDispatch", simulation_time, ret_val["EConnectionDispatch"])
@@ -59,7 +71,7 @@ First, you can see a list called `subscriptions_values`. This list defines the i
 
 The second list describes the publications or outputs of the calculation. There are two parameters of a publication description that are worth mentioning: `global_flag` this needs to be set to `True` and will be removed in later versions of this template, and, `esdl_type` this is the esdl type of the calculation service that you are defining in this case `EConnection`. 
 
-After the definition of the subscription and publication values the actual calculation is defined by instantiating `HelicsCalculationInformation`. The first 5 parameters are related to a helics federate confguration and therefore the reader is reffered to the [helics documentation](https://docs.helics.org/en/latest/references/configuration_options_reference.html#broker_init_string--null). The other parameters should be self explenatory based their names. 
+After the definition of the subscription and publication values the actual calculation is defined by instantiating `HelicsCalculationInformation`. The first 6 parameters except for `time_request_type` are related to a helics federate confguration and therefore the reader is reffered to the [helics documentation](https://docs.helics.org/en/latest/references/configuration_options_reference.html#broker_init_string--null). The parameter `time_request_type` defines when the calculation service is woken up by helics and therefore executed. Setting the value to `TimeRequestType.ON_INPUT` will ensure that it is only executed when it has recieved its required inputs and on a time that corresponds to its defined `period`. Setting `time_request_type` to `TimeRequestType.PERIOD` will make sure it is executed periodically based on its defined `period`. The other parameters should be self explenatory based their names. 
 
 Finally, the the last line adds the calculation to the calculation service and ensures that it is executed during a running co-simulation. Every added calculation will become a [helics federate](https://docs.helics.org/en/latest/user-guide/fundamental_topics/helics_terminology.html) with their own timing parameters as defined in the `calculation_information`. To get an idea of how helics timing works have a look at this [page](https://docs.helics.org/en/latest/user-guide/fundamental_topics/timing_configuration.html) of the helics documentation.
 

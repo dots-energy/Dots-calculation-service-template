@@ -2,8 +2,7 @@
 from datetime import datetime
 from esdl import esdl
 import helics as h
-import logging
-from dots_infrastructure.DataClasses import EsdlId, HelicsCalculationInformation, PublicationDescription, SubscriptionDescription, TimeStepInformation
+from dots_infrastructure.DataClasses import EsdlId, HelicsCalculationInformation, PublicationDescription, SubscriptionDescription, TimeStepInformation, TimeRequestType
 from dots_infrastructure.HelicsFederateHelpers import HelicsSimulationExecutor
 from dots_infrastructure.Logger import LOGGER
 from esdl import EnergySystem
@@ -32,6 +31,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
         calculation_information = HelicsCalculationInformation(
             time_period_in_seconds=e_connection_period_in_seconds, 
+            time_request_type=TimeRequestType.ON_INPUT,
             offset=0, 
             uninterruptible=False, 
             wait_for_current_time_update=False, 
@@ -49,7 +49,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
         e_connection_period_in_seconds = 21600
 
-        calculation_information_schedule = HelicsCalculationInformation(e_connection_period_in_seconds, 0, False, False, True, "EConnectionSchedule", [], publication_values, self.e_connection_da_schedule)
+        calculation_information_schedule = HelicsCalculationInformation(e_connection_period_in_seconds, TimeRequestType.PERIOD, 0, False, False, True, "EConnectionSchedule", [], publication_values, self.e_connection_da_schedule)
         self.add_calculation(calculation_information_schedule)
 
     def init_calculation_service(self, energy_system: esdl.EnergySystem):
