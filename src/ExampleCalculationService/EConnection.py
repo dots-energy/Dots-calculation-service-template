@@ -4,6 +4,7 @@ from esdl import esdl
 import helics as h
 from dots_infrastructure.DataClasses import EsdlId, HelicsCalculationInformation, PublicationDescription, SubscriptionDescription, TimeStepInformation, TimeRequestType
 from dots_infrastructure.HelicsFederateHelpers import HelicsSimulationExecutor
+from dots_infrastructure.CalculationServiceHelperFunctions import get_single_param_with_name, get_vector_param_with_name
 from dots_infrastructure.Logger import LOGGER
 from esdl import EnergySystem
 
@@ -59,7 +60,9 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
     def e_connection_dispatch(self, param_dict : dict, simulation_time : datetime, time_step_number : TimeStepInformation, esdl_id : EsdlId, energy_system : EnergySystem):
         ret_val = {}
-        ret_val["EConnectionDispatch"] = sum(param_dict["PV_Dispatch"])
+        single_dispatch_value = get_single_param_with_name(param_dict, "PV_Dispatch") # returns the first value in param dict with "PV_Dispatch" in the key name
+        all_dispatch_values = get_vector_param_with_name(param_dict, "PV_Dispatch") # returns all the values as a list in param_dict with "PV_Dispatch" in the key name
+        ret_val["EConnectionDispatch"] = sum(single_dispatch_value)
         self.influx_connector.set_time_step_data_point(esdl_id, "EConnectionDispatch", simulation_time, ret_val["EConnectionDispatch"])
         return ret_val
     
