@@ -3,8 +3,8 @@ A template repository for DOTs-helics calculation services.
 To create a new calculation service follow the following steps (For a more detailed explenation see below):
 1. Create a new github repository based on this template.
 2. Edit the `EConnection.py` based upon your needs i.e. define the correct calculations for the calculation service.
-3. Edit the `TestTemplate.py` to test your calculations indepedently in a python unit test
-4. When everything works as expected use the `build_and_push_image_dockerhub.sh` script to push your image to dockerhub.
+3. Edit the `TestTemplate.py` to test your calculations indepedently in a python unit test.
+4. Replace the placeholders in the `Dockerfile`. The foldername should match the one that is in the src folder.
 
 ## Creating a calculation in the calculation service
 The initial `EConnection.py` defines two calculations inside the `EConnection` calculation service. These calculations are called `EConnectionDispatch` and `EConnectionSchedule` respectively. Let's take a look at the definition of the first calculation:
@@ -33,8 +33,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
         e_connection_period_in_seconds = 60
 
         calculation_information = HelicsCalculationInformation(
-            time_period_in_seconds=e_connection_period_in_seconds, 
-            time_request_type=TimeRequestType.ON_INPUT,
+            time_period_in_seconds=e_connection_period_in_seconds,
             offset=0, 
             uninterruptible=False, 
             wait_for_current_time_update=False, 
@@ -73,13 +72,26 @@ First, you can see a list called `subscriptions_values`. This list defines the i
 
 The second list describes the publications or outputs of the calculation. There are two parameters of a publication description that are worth mentioning: `global_flag` this needs to be set to `True` and will be removed in later versions of this template, and, `esdl_type` this is the esdl type of the calculation service that you are defining in this case `EConnection`. 
 
-After the definition of the subscription and publication values the actual calculation is defined by instantiating `HelicsCalculationInformation`. The first 6 parameters except for `time_request_type` are related to a helics federate confguration and therefore the reader is reffered to the [helics documentation](https://docs.helics.org/en/latest/references/configuration_options_reference.html#broker_init_string--null). The parameter `time_request_type` defines when the calculation service is woken up by helics and therefore executed. Setting the value to `TimeRequestType.ON_INPUT` will ensure that it is only executed when it has recieved its required inputs and on a time that corresponds to its defined `period`. Setting `time_request_type` to `TimeRequestType.PERIOD` will make sure it is executed periodically based on its defined `period`. The other parameters should be self explenatory based their names. 
+After the definition of the subscription and publication values the actual calculation is defined by instantiating `HelicsCalculationInformation`. The first 5 parameters are related to a helics federate confguration and therefore the reader is reffered to the [helics documentation](https://docs.helics.org/en/latest/references/configuration_options_reference.html#broker_init_string--null).
 
 Finally, the the last line adds the calculation to the calculation service and ensures that it is executed during a running co-simulation. Every added calculation will become a [helics federate](https://docs.helics.org/en/latest/user-guide/fundamental_topics/helics_terminology.html) with their own timing parameters as defined in the `calculation_information`. To get an idea of how helics timing works have a look at this [page](https://docs.helics.org/en/latest/user-guide/fundamental_topics/timing_configuration.html) of the helics documentation.
 
 When the simulation starts there will be an initialization stage and a calculating stage. In the initialization phase a calculation service can initialize variables that are required in the calculation stage. This can be done by adjusting the `init_calculation_service` function. The esdl that is associated with the simulated scenario is given as a parameter to this function.
 
-In the calculation phase the calculation functions are called periodically and new inputs can be read and new outputs can be generated. An example of getting inputs, returning outputs and writing to the influx db can be found in the example above.
+In the calculation phase the calculation functions are called periodically for each simulated esdl entity. The `esdl_id` of the simulated entity is passed as a parameter to the calculation function. New inputs can be read and new outputs can be generated. An example of getting inputs, returning outputs and writing to the influx db can be found in the example above.
+
+## Getting inputs from a calculation service
+The input parameters provided by other calculation services are provided by the `param_dict` parameter in the calculation. Wheneve the calculation function `e_connection_dispatch` is called, the param dict for the calculation `e_connection_dispatch` could look like:
+
+```
+param_dict = {
+    "PVInstallation/PV_Dispatch/1f60ceb9-9708-4d89-b079-482abc1408ea" : 5,
+    "PVInstallation/PV_Dispatch/468f4332-4306-4b74-a5c2-eb8a7aa0a8d9" : 3,
+}
+```
+
+This would mean that the associated esdl entity is connected to two `PVInstallation` entities with id `1f60ceb9-9708-4d89-b079-482abc1408ea` and `468f4332-4306-4b74-a5c2-eb8a7aa0a8d9` respectively. There are two ways to retrieve the values from the dictionary. First, by the python way of retrieving values from a dictiononary i.e. `param_dict[key]` this would require know the keys of dictionary. 
+The second option is to use the helper functions in `dots_infrastructure.CalculationServiceHelperFunctions` (as shown in the above example). The function `get_single_param_with_name` will get the first value in `param_dict` with a specific input name. In the above example the input called `PV_Dispatch` is fetched and thus the function will return the vaule `5`. The other function to help retrieve values is called `get_vector_param_with_name` and will return all the values with a specific `input_name` as list. In this example it wil return the list `[5, 3]`.
 
 ## Testing a calculation service
 
