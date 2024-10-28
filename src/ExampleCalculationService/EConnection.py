@@ -31,8 +31,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
         e_connection_period_in_seconds = 60
 
         calculation_information = HelicsCalculationInformation(
-            time_period_in_seconds=e_connection_period_in_seconds, 
-            time_request_type=TimeRequestType.ON_INPUT,
+            time_period_in_seconds=e_connection_period_in_seconds,
             offset=0, 
             uninterruptible=False, 
             wait_for_current_time_update=False, 
