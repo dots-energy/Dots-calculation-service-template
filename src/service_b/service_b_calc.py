@@ -71,6 +71,7 @@ class ServiceBCalculation(HelicsSimulationExecutor):
         esdl_id: EsdlId,
         energy_system: EnergySystem,
     ):
+        LOGGER.info(f"param_dict: {param_dict}")
         ret_val = {}
         single_dispatch_value = get_single_param_with_name(
             param_dict, "Schedule"
