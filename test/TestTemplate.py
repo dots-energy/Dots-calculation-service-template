@@ -1,6 +1,6 @@
 from datetime import datetime
 import unittest
-from ExampleCalculationService.EConnection import CalculationServiceEConnection
+from service_a.service_a_calc import ServiceACalculation
 from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
 from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
 import helics as h
@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
 
     def test_example(self):
         # Arrange
-        service = CalculationServiceEConnection()
+        service = ServiceACalculation()
         service.influx_connector = InfluxDBMock()
         pv_dispatch_params = {}
         pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
