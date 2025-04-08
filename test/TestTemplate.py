@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
         service = ServiceACalculation()
         service.influx_connector = InfluxDBMock()
         pv_dispatch_params = {}
-        pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
+        pv_dispatch_params["PV_Dispatch"] = 3.0
         service.init_calculation_service(None)
 
         # Execute
@@ -57,9 +57,9 @@ class Test(unittest.TestCase):
         )
 
         # Implement
-        self.assertEqual(ret_val["EConnectionDispatch"], 3.0)
+        self.assertEqual(ret_val["EConnectionDispatch"], 1.5)
         self.assertListEqual(
-            [SimulaitonDataPoint("EConnectionDispatch", datetime(2024, 1, 1), 3.0, "test-id")],
+            [SimulaitonDataPoint("EConnectionDispatch", datetime(2024, 1, 1), 1.5, "test-id")],
             service.influx_connector.data_points,
         )
 
