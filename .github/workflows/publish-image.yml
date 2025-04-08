@@ -10,7 +10,7 @@ on:
       - v*
   pull_request:
 env:
-  IMAGE_NAME: service_a:0.0.1
+  IMAGE_NAME: service_b
 jobs:
   push:
     runs-on: ubuntu-latest
