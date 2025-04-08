@@ -19,7 +19,7 @@ from dots_infrastructure.Logger import LOGGER
 from esdl import EnergySystem
 
 
-class CalculationServiceEConnection(HelicsSimulationExecutor):
+class ServiceBCalculation(HelicsSimulationExecutor):
 
     def __init__(self):
         super().__init__()
@@ -78,7 +78,7 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
         all_dispatch_values = get_vector_param_with_name(
             param_dict, "Schedule"
         )
-        ret_val["PV_Dispatch"] = single_dispatch_value / 2
+        ret_val["PV_Dispatch"] = max(single_dispatch_value) / 2
         self.influx_connector.set_time_step_data_point(
             esdl_id,
             "PV_Dispatch",
@@ -89,6 +89,6 @@ class CalculationServiceEConnection(HelicsSimulationExecutor):
 
 
 if __name__ == "__main__":
-    helics_simulation_executor = CalculationServiceEConnection()
+    helics_simulation_executor = ServiceBCalculation()
     helics_simulation_executor.start_simulation()
     helics_simulation_executor.stop_simulation()
