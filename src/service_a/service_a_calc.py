@@ -101,7 +101,7 @@ class ServiceACalculation(HelicsSimulationExecutor):
         all_dispatch_values = get_vector_param_with_name(
             param_dict, "PV_Dispatch"
         )  # returns all the values as a list in param_dict with "PV_Dispatch" in the key name
-        ret_val["EConnectionDispatch"] = sum(single_dispatch_value)
+        ret_val["EConnectionDispatch"] = single_dispatch_value
         self.influx_connector.set_time_step_data_point(
             esdl_id,
             "EConnectionDispatch",
