@@ -17,6 +17,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.black]
+line-length = 100
+
 [project.urls]
 Homepage = "https://github.com/EES-TUe/Dots-calculation-service-template"
 Issues = "https://github.com/EES-TUe/Dots-calculation-service-template/issues"
