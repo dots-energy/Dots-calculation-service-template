@@ -118,7 +118,8 @@ class ServiceACalculation(HelicsSimulationExecutor):
         esdl_id: EsdlId,
         energy_system: EnergySystem,
     ):
-        ret_val = [3,2,1]
+        LOGGER.info("Sending schedule")
+        ret_val = dict(Schedule = [3,2,1])
         return ret_val
 
 
