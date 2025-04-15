@@ -3,6 +3,7 @@ import unittest
 from ExampleCalculationService.EConnection import CalculationServiceEConnection
 from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
 from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
+from esdl.esdl_handler import EnergySystemHandler
 import helics as h
 
 from dots_infrastructure import CalculationServiceHelperFunctions
@@ -18,6 +19,9 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         CalculationServiceHelperFunctions.get_simulator_configuration_from_environment = simulator_environment_e_connection
+        esh = EnergySystemHandler()
+        esh.load_file("test.esdl")
+        self.energy_system = esh.get_energy_system()
 
     def test_example(self):
         # Arrange
@@ -25,10 +29,10 @@ class Test(unittest.TestCase):
         service.influx_connector = InfluxDBMock()
         pv_dispatch_params = {}
         pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
-        service.init_calculation_service(None)
+        service.init_calculation_service(self.energy_system)
 
         # Execute
-        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), "test-id", None)
+        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), "test-id", self.energy_system)
 
         # Implement 
         self.assertEqual(ret_val["EConnectionDispatch"], 3.0)

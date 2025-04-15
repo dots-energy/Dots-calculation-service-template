@@ -98,7 +98,8 @@ The second option is to use the helper functions in `dots_infrastructure.Calcula
 1. Create a new python virtual environment
 2. Install dependencies `pip install -r requirements.txt`
 3. Install package `pip install -e .`
-4. Run `python -m unittest discover -s ./test -p 'Test*.py'`
+4. Run `cd test`
+5. Run `python -m unittest discover -s ./ -p 'Test*.py'`
 
 ## Building a docker image such that it can be used 
 
