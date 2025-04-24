@@ -6,7 +6,6 @@ RUN mkdir /app/
 WORKDIR /app
 
 COPY src/<<INSERT_FOLDER_NAME>> src/<<INSERT_FOLDER_NAME>>
-COPY requirements.txt ./
 COPY pyproject.toml ./
 COPY README.md ./
 RUN pip install ./

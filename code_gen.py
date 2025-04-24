@@ -3,6 +3,16 @@ from dots_infrastructure.code_gen.code_gen import CodeGenerator
 import json
 import os
 
+def replace_string_in_file(file_path, old_string, new_string):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            filedata = file.read()
+
+        filedata = filedata.replace(old_string, new_string)
+
+        with open(file_path, 'w') as file:
+            file.write(filedata)
+
 code_generator = CodeGenerator()
 with open("input.json", "r") as input_file:
     input_data = input_file.read()
@@ -22,12 +32,6 @@ if os.path.exists("test/test_template.py"):
 
 code_generator.code_gen(input=input_data, code_output_dir=f"src/{cs_name}", documentation_ouput_dir="docs")
 
-with open('pyproject.toml', 'r') as file:
-  filedata = file.read()
-
-# Replace the target string
-filedata = filedata.replace('ExampleCalculationService', cs_name)
-
-# Write the file out again
-with open('pyproject.toml', 'w') as file:
-  file.write(filedata)
+replace_string_in_file('pyproject.toml', 'ExampleCalculationService', cs_name)
+replace_string_in_file('Dockerfile', '<<INSERT_FOLDER_NAME>>', cs_name)
+replace_string_in_file('Dockerfile', '<<INSERT_IMPLEMENTATION_PYTHON_FILENAME>>', cs_python_name)

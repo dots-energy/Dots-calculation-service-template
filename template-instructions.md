@@ -7,10 +7,8 @@ To create a new calculation service follow the following steps (For a more detai
 2. Create a new python virtual environment and install the dependencies in the `pyproject.toml` with `pip install -e ./`.
 3. Edit the `input.json` file based upon your needs i.e. define the correct calculations for the calculation service.
 4. Run the code generator with: `python code_gen.py`.
-5. Replace `ExampleCalculationService` with the calculation service name in the `pyproject.toml`.
-6. Copy the calculation method signatures into: `<<CalculationServiceName>>.py`
-7. Edit the `Test<<CalculationServiceName>>.py` to test your calculations indepedently in a python unit test.
-8. Replace the placeholders in the `Dockerfile`. The foldername should match the one that is in the src folder. The
+5. Copy the calculation method signatures into: `<<CalculationServiceName>>.py`
+6. Edit the `Test<<CalculationServiceName>>.py` to test your calculations indepedently in a python unit test.
 
 ## Updating a calculation service
 If you want to update the calculation service i.e. add new calculation, update documentation strings or add new in and outputs please follow the following steps:
@@ -160,9 +158,8 @@ Observe that the names of the inputs retrieved and the outputs that are set must
 ## Building a docker image such that it can be used 
 
 1. Adjust `<<ImageName>>` to the name of the calculation service's image in the file `.github/workflows/publish-image.yml`
-2. Adjust `<<INSERT_FOLDER_NAME>>` and `<<INSERT_IMPLEMENTATION_PYTHON_FILENAME>>` in the `Dockerfile`.
-3. Push your changes to a new branch
-4. Create a pull request
-5. A github action will now run building the calculation service as a docker image and pushing it to the registry, as long as the pull request is not merged in the main branch the version number will be `test`
-6. When finished complete the pull request and a new docker image will be built and pushed with version number `latest`
-7. Change the visibility of the package to public, follow the steps detail [here](https://docs.github.com/en/enterprise-server@3.12/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#configuring-visibility-of-packages-for-an-organization).
+2. Push your changes to a new branch
+3. Create a pull request
+4. A github action will now run building the calculation service as a docker image and pushing it to the registry, as long as the pull request is not merged in the main branch the version number will be `test`
+5. When finished complete the pull request and a new docker image will be built and pushed with version number `latest`
+6. Change the visibility of the package to public, follow the steps detail [here](https://docs.github.com/en/enterprise-server@3.12/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#configuring-visibility-of-packages-for-an-organization).

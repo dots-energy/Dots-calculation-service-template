@@ -26,3 +26,9 @@ class CalculationServiceTest(CalculationServiceTestBase):
         ret_val = {}
         ret_val["output3"] = 3.0
         return ret_val
+    
+if __name__ == "__main__":
+
+    helics_simulation_executor = CalculationServiceTest()
+    helics_simulation_executor.start_simulation()
+    helics_simulation_executor.stop_simulation()
