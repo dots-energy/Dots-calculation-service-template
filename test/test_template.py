@@ -1,6 +1,6 @@
 from datetime import datetime
 import unittest
-from ExampleCalculationService.CalculationServiceTest import CalculationServiceTest
+from ExampleCalculationService.calculation_service_test import CalculationServiceTest
 from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
 from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
 from esdl.esdl_handler import EnergySystemHandler
