@@ -9,7 +9,6 @@ COPY src/<<INSERT_FOLDER_NAME>> src/<<INSERT_FOLDER_NAME>>
 COPY requirements.txt ./
 COPY pyproject.toml ./
 COPY README.md ./
-RUN pip install -r requirements.txt
 RUN pip install ./
 
 ENTRYPOINT python3 src/<<INSERT_FOLDER_NAME>>/<<INSERT_IMPLEMENTATION_PYTHON_FILENAME>>.py

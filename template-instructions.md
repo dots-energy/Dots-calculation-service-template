@@ -6,8 +6,8 @@ To create a new calculation service follow the following steps (For a more detai
 1. Create a new github repository based on this template.
 2. Create a new python virtual environment and install the dependencies in the `pyproject.toml` with `pip install -e ./`.
 3. Edit the `input.json` file based upon your needs i.e. define the correct calculations for the calculation service.
-4. Replace `ExampleCalculationService` with the calculation service name in the `pyproject.toml`.
-5. Run the code generator with: `python code_gen.py`.
+4. Run the code generator with: `python code_gen.py`.
+5. Replace `ExampleCalculationService` with the calculation service name in the `pyproject.toml`.
 6. Copy the calculation method signatures into: `<<CalculationServiceName>>.py`
 7. Edit the `Test<<CalculationServiceName>>.py` to test your calculations indepedently in a python unit test.
 8. Replace the placeholders in the `Dockerfile`. The foldername should match the one that is in the src folder. The
