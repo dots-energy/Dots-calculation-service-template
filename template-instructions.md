@@ -4,9 +4,9 @@ A template repository for DOTs-helics calculation services.
 ## Creating a new calculation service (short steps)
 To create a new calculation service follow the following steps (For a more detailed explenation see below):
 1. Create a new github repository based on this template.
-2. Replace <<INSERT_CALCULATION_SERVICE_NAME>> with you the calculation service name in the `pyproject.toml`.
-3. Create a new python virtual environment and install the dependencies in the `pyproject.toml` with `pip install -e ./`.
-4. Edit the `input.json` file based upon your needs i.e. define the correct calculations for the calculation service.
+2. Create a new python virtual environment and install the dependencies in the `pyproject.toml` with `pip install -e ./`.
+3. Edit the `input.json` file based upon your needs i.e. define the correct calculations for the calculation service.
+4. Replace `ExampleCalculationService` with the calculation service name in the `pyproject.toml`.
 5. Run the code generator with: `python code_gen.py`.
 6. Copy the calculation method signatures into: `<<CalculationServiceName>>.py`
 7. Edit the `Test<<CalculationServiceName>>.py` to test your calculations indepedently in a python unit test.
