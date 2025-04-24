@@ -12,4 +12,4 @@ COPY README.md ./
 RUN pip install -r requirements.txt
 RUN pip install ./
 
-ENTRYPOINT python3 src/<<INSERT_FOLDER_NAME>>/<<INSERT_MAIN_PYTHON_FILENAME>>.py
+ENTRYPOINT python3 src/<<INSERT_FOLDER_NAME>>/<<INSERT_IMPLEMENTATION_PYTHON_FILENAME>>.py

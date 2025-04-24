@@ -1,6 +1,6 @@
 from datetime import datetime
 import unittest
-from ExampleCalculationService.EConnection import CalculationServiceEConnection
+from ExampleCalculationService.CalculationServiceTest import CalculationServiceTest
 from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
 from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
 from esdl.esdl_handler import EnergySystemHandler
@@ -11,9 +11,10 @@ from dots_infrastructure import CalculationServiceHelperFunctions
 BROKER_TEST_PORT = 23404
 START_DATE_TIME = datetime(2024, 1, 1, 0, 0, 0)
 SIMULATION_DURATION_IN_SECONDS = 960
+TEST_ID = "test-id"
 
 def simulator_environment_e_connection():
-    return SimulatorConfiguration("EConnection", ["f006d594-0743-4de5-a589-a6c2350898da"], "Mock-Econnection", "127.0.0.1", BROKER_TEST_PORT, "test-id", SIMULATION_DURATION_IN_SECONDS, START_DATE_TIME, "test-host", "test-port", "test-username", "test-password", "test-database-name", h.HelicsLogLevel.DEBUG, ["PVInstallation", "EConnection"])
+    return SimulatorConfiguration("EConnection", [TEST_ID], "Mock-Econnection", "127.0.0.1", BROKER_TEST_PORT, "test-id", SIMULATION_DURATION_IN_SECONDS, START_DATE_TIME, "test-host", "test-port", "test-username", "test-password", "test-database-name", h.HelicsLogLevel.DEBUG, ["PVInstallation", "EConnection"])
 
 class Test(unittest.TestCase):
 
@@ -25,18 +26,18 @@ class Test(unittest.TestCase):
 
     def test_example(self):
         # Arrange
-        service = CalculationServiceEConnection()
+        service = CalculationServiceTest()
         service.influx_connector = InfluxDBMock()
         pv_dispatch_params = {}
-        pv_dispatch_params["PV_Dispatch"] = [1.0, 2.0]
+        pv_dispatch_params["input1"] = [1.0, 2.0]
         service.init_calculation_service(self.energy_system)
 
         # Execute
-        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), "test-id", self.energy_system)
+        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), TEST_ID, self.energy_system)
 
         # Implement 
-        self.assertEqual(ret_val["EConnectionDispatch"], 3.0)
-        self.assertListEqual([SimulaitonDataPoint("EConnectionDispatch", datetime(2024,1,1), 3.0, "test-id")], service.influx_connector.data_points)
+        self.assertEqual(ret_val["output1"], 3.0)
+        self.assertListEqual([SimulaitonDataPoint("output1", datetime(2024,1,1), 3.0, TEST_ID)], service.influx_connector.data_points)
 
 if __name__ == '__main__':
     unittest.main()
