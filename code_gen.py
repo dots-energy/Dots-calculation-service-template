@@ -27,7 +27,7 @@ with open("input.json", "r") as input_file:
 
 parsed_input_data = json.loads(input_data)
 cs_name = code_generator.camel_case(parsed_input_data["name"])
-cs_python_name = code_generator.get_python_filename(cs_name)
+cs_python_name = code_generator.get_python_name(cs_name)
 cs_python_base_class_name = code_generator.get_base_class_name(cs_name)
 
 if os.path.exists("src/ExampleCalculationService"):
