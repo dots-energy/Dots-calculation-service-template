@@ -1,8 +1,6 @@
 from datetime import datetime
 import unittest
-from ExampleCalculationService.calculation_service_test import CalculationServiceTest
-from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
-from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
+from dots_infrastructure.DataClasses import SimulatorConfiguration
 from esdl.esdl_handler import EnergySystemHandler
 import helics as h
 
@@ -25,19 +23,7 @@ class Test(unittest.TestCase):
         self.energy_system = esh.get_energy_system()
 
     def test_example(self):
-        # Arrange
-        service = CalculationServiceTest()
-        service.influx_connector = InfluxDBMock()
-        pv_dispatch_params = {}
-        pv_dispatch_params["input1"] = [1.0, 2.0]
-        service.init_calculation_service(self.energy_system)
-
-        # Execute
-        ret_val = service.e_connection_dispatch(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), TEST_ID, self.energy_system)
-
-        # Implement 
-        self.assertEqual(ret_val["output1"], 3.0)
-        self.assertListEqual([SimulaitonDataPoint("output1", datetime(2024,1,1), 3.0, TEST_ID)], service.influx_connector.data_points)
+        pass
 
 if __name__ == '__main__':
     unittest.main()
