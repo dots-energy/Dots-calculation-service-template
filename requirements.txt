@@ -1,2 +1,0 @@
-helics==3.6.1
-dots_infrastructure==0.4.6
