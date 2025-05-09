@@ -26,7 +26,15 @@ jobs:
         run: echo "VERSION=${{ github.head_ref }}" >> $GITHUB_ENV
       - name: Define version for pushing to main branch
         if: ${{ github.event_name == 'push'}}
-        run: echo "VERSION=latest" >> $GITHUB_ENV
+        run: |
+            TAGS=$(git tag -l)
+            if [[ ${TAGS} == "" ]]
+            then
+                VERSION=1.0.0
+            else
+                VERSION=$(git describe --tags --abbrev=0 | awk -F '[-.]' '{print $1+1"."$2"."$3}')
+            fi
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
       - name: Push image
@@ -38,3 +46,7 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git tag $VERSION
+          git push origin tag $VERSION
