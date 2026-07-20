@@ -61,3 +61,6 @@ if __name__ == "__main__":
     helics_simulation_executor = ExampleBatteryService()
     helics_simulation_executor.start_simulation()
     helics_simulation_executor.stop_simulation()
+
+
+###
